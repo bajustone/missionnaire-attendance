@@ -1,0 +1,18 @@
+.formComponent{
+    position: relative;
+}
+.formSection{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+}
+.formSection.current{
+    opacity: 1;
+    pointer-events: auto;
+}
+.loadingBar{
+    top: 0px;
+}

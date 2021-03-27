@@ -1,0 +1,15 @@
+.attanceListPage{
+    align-items: flex-start;
+    margin-top: 24px;
+    width: 100%;
+}
+@media only screen and (max-width: 500px){
+	.attanceListPage {
+        margin-top: 48px;
+        justify-content: left;
+    
+    }
+}
+.hideContent{
+    opacity: 0;
+}

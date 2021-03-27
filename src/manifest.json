@@ -1,0 +1,16 @@
+{
+  "name": "Missionnaire App",
+  "short_name": "Missionnaire App",
+  "start_url": "/register",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#D86C00",
+  "theme_color": "#D86C00",
+  "icons": [
+    {
+      "src": "/assets/icons/logo-1.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ]
+}

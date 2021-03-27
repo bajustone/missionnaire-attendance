@@ -1,0 +1,9 @@
+.alignRight{
+    justify-content: flex-end;
+}
+.loginForm{
+    padding: 16px;
+}
+.loadingBar{
+    top: 8px;
+}
