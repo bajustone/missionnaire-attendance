@@ -26,6 +26,7 @@ class AttandanceList extends Component {
 
         AppDB.collection("amateraniro_logs")
         .orderBy("names", "asc")
+        .orderBy("registrationTime", "desc")
         .onSnapshot(snap=>{
            const docsData = snap.docs.map(doc=>{
                const docId = doc.id;
