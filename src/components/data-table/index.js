@@ -135,7 +135,7 @@ export class DataTable extends Component {
             for(let col of allowedRows){
                 rowData[col] = row[col];
             }
-            const rowComponent = this.rowDef(rowData, index, row);
+            const rowComponent = this.rowDef(row, index, rowData);
 
             return rowComponent;
 

@@ -10,21 +10,34 @@ class AttandanceList extends Component {
         data: [],
         user: null,
         allowDeleteAction: false,
-        selectedRows: new Map()
+        selectedRows: new Map(),
+        itarikiAmateraniro: "-"
     };
     constructor(){
         super();
         this.rowDef = this.rowDef.bind(this);
     }
-    userChanged(user){
+    async setServiceDate(serviceId){
+        const doc = await AppDB.doc(`amateraniro/${serviceId}`).get();
+        if(!doc.exists) return;
+
+        this.setState({itarikiAmateraniro: doc.data().date.toDate()})
+
+    }
+    async userChanged(user) {
         this.setState({user: user});
         if(!user){
             window.history.replaceState({},null, "/login");
             window.history.go();
         }
+        
+        const activeService = await this.getCurrentChurchService();
+        if(!activeService) return;
+        
+        this.setServiceDate(activeService);
 
-
-        AppDB.collection("amateraniro_logs")
+        AppDB.collection("amateraniro")
+        .doc(activeService).collection("abateranye")
         .orderBy("names", "asc")
         .onSnapshot(snap=>{
            const docsData = snap.docs.map(doc=>{
@@ -33,8 +46,7 @@ class AttandanceList extends Component {
                return {
                    ...doc.data(),
                    docId,
-                   docPath,
-                   registrationTime: doc.data().registrationTime.toDate().toLocaleString()
+                   docPath
                };
            });
            this.setState({data: docsData});
@@ -69,7 +81,7 @@ class AttandanceList extends Component {
             <td>{data.akagari.toUpperCase()}</td>
             <td>{data.umudugudu.toUpperCase()}</td>
             <td>{data.isibo ? data.isibo.toUpperCase() : "-"}</td>
-            <td>{data.registrationTime}</td>
+            <td>{data.tempeture}</td>
         </tr>;
     }
     async deleteRow() {
@@ -110,7 +122,7 @@ class AttandanceList extends Component {
         Array.from(this.state.selectedRows.values())
             .forEach(row=>{
                 const docRef = serviceAttendees.doc(row.docId);
-                batch.set(docRef, {...row, attendanceTime: Date.now(), tempeture: tempNumber}); 
+                batch.set(docRef, {...row, tempeture: tempNumber}); 
                
             });
         await batch.commit();
@@ -129,8 +141,7 @@ class AttandanceList extends Component {
                 <div className={`${!state.user ? style.hideContent : ""}`}>
                     <Header user={state.user} path={props.path} />
                     <div className={style.titleAndActions}>
-                    <h1>Attendance list</h1>
-                    {this.actionTab()}
+                    <h1>Amateraniro yo kuwa {state.itarikiAmateraniro.toLocaleString()}</h1>
                     </div>
                     <DataTable data={state.data} showRowNumbers rowDef={this.rowDef}>
                         <ColDef name="names">Amazina</ColDef>
@@ -141,7 +152,7 @@ class AttandanceList extends Component {
                         <ColDef name="akagari">Akagari</ColDef>
                         <ColDef name="umudugudu">Umudugudu</ColDef>
                         <ColDef name="isibo">Isibo</ColDef>
-                        <ColDef name="registrationTime">Itariki</ColDef>
+                        <ColDef name="tempeture">Temperature</ColDef>
                     </DataTable>
                 </div>
             </div>
