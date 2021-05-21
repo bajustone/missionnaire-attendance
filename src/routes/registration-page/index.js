@@ -84,7 +84,7 @@ export default class RegistrationPage extends Component {
 			<div className={style.formComponent}>
 				<div className={`${style.formSection} ${formSectionIndex == 0 ? style.current : ""}`}>
 					<FormInput name="names" id="names" label="Amazina" autofocus required value={registrationFormValue.names ? registrationFormValue.names : ""} />
-					<FormInput name="nidNumber" id="nidNumber" label="Numero y'indangamuntu" required inputmode="numeric" type="text" pattern="[0-9]{16}|[0-9]{3}-[0-9]{8}" value={registrationFormValue.nidNumber ? registrationFormValue.nidNumber : ""} />
+					<FormInput name="nidNumber" id="nidNumber" label="Numero y'indangamuntu" required inputmode="numeric" type="text" pattern="[0-9]{16}|[0-9]{3}-[0-9]{8}|[0-9]{16}-[0-9]{1}" value={registrationFormValue.nidNumber ? registrationFormValue.nidNumber : ""} />
 					<FormInput name="telphoneNumber" id="telphoneNumber" label="Nomero ya telephoni" required type="tel" pattern="07[0-9]{8}" value={registrationFormValue.telphoneNumber ? registrationFormValue.telphoneNumber : ""} />
 					<div className="formControlsSection alignRight">
 						<button className="defaultButton filled" onClick={evt=>this.changeFormSection(1)} type="button" disabled={this.state.isSubmiting}>KOMEZA</button>
