@@ -3,7 +3,7 @@ import Header from "../../components/header";
 import style from './style';
 import { DataTable, ColDef } from '../../components/data-table';
 
-import {AppDB, FireApp} from "../../firestore";
+import { AppDB, FireApp } from "../../firestore";
 
 class AttandanceList extends Component {
     state = {
@@ -12,55 +12,55 @@ class AttandanceList extends Component {
         allowDeleteAction: false,
         selectedRows: new Map()
     };
-    constructor(){
+    constructor() {
         super();
         this.rowDef = this.rowDef.bind(this);
     }
-    userChanged(user){
-        this.setState({user: user});
-        if(!user){
-            window.history.replaceState({},null, "/login");
+    userChanged(user) {
+        this.setState({ user: user });
+        if (!user) {
+            window.history.replaceState({}, null, "/login");
             window.history.go();
         }
 
 
         AppDB.collection("amateraniro_logs")
-        .orderBy("names", "asc")
-        .orderBy("registrationTime", "desc")
-        .onSnapshot(snap=>{
-           const docsData = snap.docs.map(doc=>{
-               const docId = doc.id;
-               const docPath = doc.ref.path;
-               return {
-                   ...doc.data(),
-                   docId,
-                   docPath,
-                   registrationTime: doc.data().registrationTime.toDate().toLocaleString()
-               };
-           });
-           this.setState({data: docsData});
-        });
-	}
-    componentDidMount(){
+            .orderBy("names", "asc")
+            .orderBy("registrationTime", "desc")
+            .onSnapshot(snap => {
+                const docsData = snap.docs.map(doc => {
+                    const docId = doc.id;
+                    const docPath = doc.ref.path;
+                    return {
+                        ...doc.data(),
+                        docId,
+                        docPath,
+                        registrationTime: doc.data().registrationTime.toDate().toLocaleString()
+                    };
+                });
+                this.setState({ data: docsData });
+            });
+    }
+    componentDidMount() {
         document.title = "Attendance app";
-        FireApp.auth().onAuthStateChanged(user=>this.userChanged(user));
+        FireApp.auth().onAuthStateChanged(user => this.userChanged(user));
 
     }
-    selectRow(row){
+    selectRow(row) {
         const rowId = row.docId;
-        if(this.state.selectedRows.has(rowId)){
+        if (this.state.selectedRows.has(rowId)) {
             this.state.selectedRows.delete(rowId);
-        }else{
+        } else {
             this.state.selectedRows.set(rowId, row);
         }
         const selectedRows = new Map(this.state.selectedRows);
         const allowDeleteAction = selectedRows.size > 0;
-        this.setState({selectedRows, allowDeleteAction});
+        this.setState({ selectedRows, allowDeleteAction });
     }
-    rowDef(data, index){
+    rowDef(data, index) {
         const rowSelected = this.state.selectedRows.has(data.docId);
         const selectedRowClass = rowSelected ? style.rowSelected : "";
-        return <tr onClick = {_=>this.selectRow(data)} className = {`${selectedRowClass} ${style.tr}`} >
+        return <tr onClick={_ => this.selectRow(data)} className={`${selectedRowClass} ${style.tr}`} >
             <td>{index + 1}</td>
             <td>{data.names.toUpperCase()}</td>
             <td>{data.nidNumber}</td>
@@ -76,31 +76,31 @@ class AttandanceList extends Component {
     async deleteRow() {
         const batch = AppDB.batch();
         Array.from(this.state.selectedRows.values())
-            .forEach(row=>{
+            .forEach(row => {
                 const docRef = AppDB.doc(row.docPath);
-                batch.delete(docRef); 
-               
+                batch.delete(docRef);
+
             });
-        confirm("Continue deletion?") 
+        confirm("Continue deletion?")
             ? await batch.commit() : null;
-        this.setState({selectedRows: new Map()});
+        this.setState({ selectedRows: new Map() });
 
     }
-    async getCurrentChurchService(){
+    async getCurrentChurchService() {
         console.log("getCurrentChurchService");
         const activeService = await AppDB.collection("amateraniro").where("active", "==", true).get();
-        if(activeService.empty) return null;
+        if (activeService.empty) return null;
         return activeService.docs[0].id;
     }
-    async attendService(){
+    async attendService() {
         const tempeture = prompt("Temperature: ");
         const tempNumber = Number(tempeture);
-        if(!tempNumber){
+        if (!tempNumber) {
             alert("Invalid temperature");
             return;
         }
         const currentChurchService = await this.getCurrentChurchService();
-        if(!currentChurchService) {
+        if (!currentChurchService) {
             alert("Nta materaniro ahari");
             return;
         }
@@ -109,19 +109,19 @@ class AttandanceList extends Component {
         const serviceAttendees = serviceDoc.collection("abateranye");
         const batch = AppDB.batch();
         Array.from(this.state.selectedRows.values())
-            .forEach(row=>{
+            .forEach(row => {
                 const docRef = serviceAttendees.doc(row.docId);
-                batch.set(docRef, {...row, attendanceTime: Date.now(), tempeture: tempNumber}); 
-               
+                batch.set(docRef, { ...row, attendanceTime: Date.now(), tempeture: tempNumber });
+
             });
         await batch.commit();
         alert("Added");
-        this.setState({selectedRows: new Map()});
+        this.setState({ selectedRows: new Map() });
     }
-    actionTab(){
+    actionTab() {
         return <div>
-            <button onClick={_=>this.attendService()} disabled={!this.state.allowDeleteAction} >Attend service</button>
-            <button onClick={_=>this.deleteRow()} disabled={!this.state.allowDeleteAction} >Delete</button>
+            <button onClick={_ => this.attendService()} disabled={!this.state.allowDeleteAction} >Attend service</button>
+            <button onClick={_ => this.deleteRow()} disabled={!this.state.allowDeleteAction} >Delete</button>
         </div>
     }
     render(props, state) {
@@ -130,8 +130,8 @@ class AttandanceList extends Component {
                 <div className={`${!state.user ? style.hideContent : ""}`}>
                     <Header user={state.user} path={props.path} />
                     <div className={style.titleAndActions}>
-                    <h1>Attendance list</h1>
-                    {this.actionTab()}
+                        <h1>Attendance list</h1>
+                        {this.actionTab()}
                     </div>
                     <DataTable data={state.data} showRowNumbers rowDef={this.rowDef}>
                         <ColDef name="names">Amazina</ColDef>
