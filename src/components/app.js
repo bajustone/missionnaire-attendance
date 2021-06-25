@@ -8,8 +8,8 @@ import RegistrationPage from '../routes/registration-page';
 import Login from '../routes/login';
 
 export default class App extends Component {
-	
-	
+
+
 	/** Gets fired when the route changes.
 	 *	@param {Object} event		"change" event from [preact-router](http://git.io/preact-router)
 	 *	@param {string} event.url	The newly routed URL
@@ -22,7 +22,7 @@ export default class App extends Component {
 		return (
 			<div id="app">
 				<Router onChange={this.handleRoute}>
-					<Login path="/"  />
+					<Login path="/" />
 					<AttandanceList path="/list" />
 					<Attended path="/attended" />
 					<RegistrationPage path="/register" />

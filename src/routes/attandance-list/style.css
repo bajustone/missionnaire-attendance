@@ -1,26 +1,25 @@
-.attanceListPage{
-    align-items: flex-start;
-    margin-top: 24px;
-    width: 100%;
-    justify-content: left;
+.attanceListPage {
+	align-items: flex-start;
+	margin-top: 24px;
+	width: 100%;
+	justify-content: left;
+}
+.titleAndActions {
+}
+.tr {
+	cursor: pointer;
+	height: 35px;
+}
 
+.rowSelected td {
+	background-color: rgb(255, 176, 96);
 }
-.titleAndActions{
-
-}
-.tr{
-    cursor: pointer;
-}
-
-.rowSelected td{
-    background-color: rgb(255, 176, 96);
-}
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 500px) {
 	.attanceListPage {
-        margin-top: 48px;
-        justify-content: left;
-    }
+		margin-top: 48px;
+		justify-content: left;
+	}
 }
-.hideContent{
-    opacity: 0;
+.hideContent {
+	opacity: 0;
 }
