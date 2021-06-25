@@ -5,23 +5,6 @@ import style from './style';
 import { DataTable, ColDef } from '../../components/data-table';
 import { AppDB, FireApp } from "../../firestore";
 
-<<<<<<< Updated upstream
-import { AppDB, FireApp } from "../../firestore";
-
-class AttandanceList extends Component {
-    state = {
-        data: [],
-        user: null,
-        allowDeleteAction: false,
-        selectedRows: new Map()
-    };
-    constructor() {
-        super();
-        this.rowDef = this.rowDef.bind(this);
-    }
-    userChanged(user) {
-        this.setState({ user: user });
-=======
 function AttandanceList(props) {
 
     const [data, setData] = useState([])
@@ -32,7 +15,6 @@ function AttandanceList(props) {
 
     const userChanged = (user) => {
         setUser(user);
->>>>>>> Stashed changes
         if (!user) {
             window.history.replaceState({}, null, "/login");
             window.history.go();
@@ -53,22 +35,6 @@ function AttandanceList(props) {
                         registrationTime: doc.data().registrationTime.toDate().toLocaleString()
                     };
                 });
-<<<<<<< Updated upstream
-                this.setState({ data: docsData });
-            });
-    }
-    componentDidMount() {
-        document.title = "Attendance app";
-        FireApp.auth().onAuthStateChanged(user => this.userChanged(user));
-
-    }
-    selectRow(row) {
-        const rowId = row.docId;
-        if (this.state.selectedRows.has(rowId)) {
-            this.state.selectedRows.delete(rowId);
-        } else {
-            this.state.selectedRows.set(rowId, row);
-=======
                 setData(docsData);
             });
     }
@@ -86,18 +52,9 @@ function AttandanceList(props) {
             selectedRows?.delete(rowId);
         } else {
             selectedRows?.set(rowId, row);
->>>>>>> Stashed changes
         }
         const selectedRows = new Map(selectedRows);
         const allowDeleteAction = selectedRows.size > 0;
-<<<<<<< Updated upstream
-        this.setState({ selectedRows, allowDeleteAction });
-    }
-    rowDef(data, index) {
-        const rowSelected = this.state.selectedRows.has(data.docId);
-        const selectedRowClass = rowSelected ? style.rowSelected : "";
-        return <tr onClick={_ => this.selectRow(data)} className={`${selectedRowClass} ${style.tr}`} >
-=======
         setSelectedRows(selectedRows)
         setAllowDeleteAction(allowDeleteAction)
     }
@@ -110,7 +67,6 @@ function AttandanceList(props) {
 
             // I will come back here
         }} className={`${selectedRowClass} ${style.tr}`} >
->>>>>>> Stashed changes
             <td>{index + 1}</td>
             <td>{data.names.toUpperCase()}</td>
             <td>{data.nidNumber}</td>
@@ -126,11 +82,7 @@ function AttandanceList(props) {
     }
     const deleteRow = async () => {
         const batch = AppDB.batch();
-<<<<<<< Updated upstream
-        Array.from(this.state.selectedRows.values())
-=======
         Array.from(selectedRows.values())
->>>>>>> Stashed changes
             .forEach(row => {
                 const docRef = AppDB.doc(row.docPath);
                 batch.delete(docRef);
@@ -138,40 +90,24 @@ function AttandanceList(props) {
             });
         confirm("Continue deletion?")
             ? await batch.commit() : null;
-<<<<<<< Updated upstream
-        this.setState({ selectedRows: new Map() });
-
-    }
-    async getCurrentChurchService() {
-=======
         setSelectedRows(new Map());
 
     }
 
     const getCurrentChurchService = async () => {
->>>>>>> Stashed changes
         console.log("getCurrentChurchService");
         const activeService = await AppDB.collection("amateraniro").where("active", "==", true).get();
         if (activeService.empty) return null;
         return activeService.docs[0].id;
     }
-<<<<<<< Updated upstream
-    async attendService() {
-        const tempeture = prompt("Temperature: ");
-=======
     const attendService = async (props) => {
         const tempeture = prompt(`${props.names} Temperature: `);
->>>>>>> Stashed changes
         const tempNumber = Number(tempeture);
         if (!tempNumber) {
             alert("Invalid temperature");
             return;
         }
-<<<<<<< Updated upstream
-        const currentChurchService = await this.getCurrentChurchService();
-=======
         const currentChurchService = await getCurrentChurchService();
->>>>>>> Stashed changes
         if (!currentChurchService) {
             alert("Nta materaniro ahari");
             return;
@@ -180,39 +116,14 @@ function AttandanceList(props) {
 
         const serviceAttendees = serviceDoc.collection("abateranye");
         const batch = AppDB.batch();
-<<<<<<< Updated upstream
-        Array.from(this.state.selectedRows.values())
-            .forEach(row => {
-                const docRef = serviceAttendees.doc(row.docId);
-                batch.set(docRef, { ...row, attendanceTime: Date.now(), tempeture: tempNumber });
-=======
         Array.from(selectedRows.values())
             .forEach(row => {
                 const docRef = serviceAttendees.doc(row.docId);
                 batch.set(docRef, { ...row, attendanceTime: Date.now(), temperature: tempNumber });
->>>>>>> Stashed changes
 
             });
         await batch.commit();
         alert("Added");
-<<<<<<< Updated upstream
-        this.setState({ selectedRows: new Map() });
-    }
-    actionTab() {
-        return <div>
-            <button onClick={_ => this.attendService()} disabled={!this.state.allowDeleteAction} >Attend service</button>
-            <button onClick={_ => this.deleteRow()} disabled={!this.state.allowDeleteAction} >Delete</button>
-        </div>
-    }
-    render(props, state) {
-        return (
-            <div className={`appSection ${style.attanceListPage}`}>
-                <div className={`${!state.user ? style.hideContent : ""}`}>
-                    <Header user={state.user} path={props.path} />
-                    <div className={style.titleAndActions}>
-                        <h1>Attendance list</h1>
-                        {this.actionTab()}
-=======
         setSelectedRows(new Map());
     }
 
@@ -228,7 +139,6 @@ function AttandanceList(props) {
                     <div>
                         <button onClick={() => attendService()} disabled={!allowDeleteAction} >Attend service</button>
                         <button onClick={() => deleteRow()} disabled={!allowDeleteAction} >Delete</button>
->>>>>>> Stashed changes
                     </div>
                 </div>
                 <DataTable data={data} showRowNumbers rowDef={rowDef}>
