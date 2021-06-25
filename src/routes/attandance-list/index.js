@@ -101,8 +101,10 @@ function AttandanceList(props) {
         return activeService.docs[0].id;
     }
     const attendService = async (props) => {
-        const tempeture = prompt(`${props.names} Temperature: `);
-        const tempNumber = Number(tempeture);
+
+        const temperature = prompt(`${props.names} Temperature: `);
+        const tempNumber = Number(temperature);
+
         if (!tempNumber) {
             alert("Invalid temperature");
             return;
@@ -136,10 +138,14 @@ function AttandanceList(props) {
                 <Header user={user} path={props.path} />
                 <div className={style.titleAndActions}>
                     <h1>Attendance list</h1>
-                    <div>
+                    {/* <div>
                         <button onClick={() => attendService()} disabled={!allowDeleteAction} >Attend service</button>
                         <button onClick={() => deleteRow()} disabled={!allowDeleteAction} >Delete</button>
-                    </div>
+
+                  
+
+                    </div> */}
+
                 </div>
                 <DataTable data={data} showRowNumbers rowDef={rowDef}>
                     <ColDef name="names">Amazina</ColDef>
